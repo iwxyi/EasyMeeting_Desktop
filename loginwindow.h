@@ -3,11 +3,28 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QLabel>
+#include <QMessageBox>
+#include <QLineEdit>
+#include <QLabel>
 
-class LoginWindow
+class LoginWindow : public QDialog
 {
 public:
-    LoginWindow();
+    LoginWindow(QWidget* parent = nullptr);
+
+private:
+    void initView();
+
+
+private:
+    QLineEdit* username_edit;
+    QLineEdit* password_edit;
+    QPushButton* login_btn;
+    QPushButton* register_btn;
 };
 
 #endif // LOGINWINDOW_H

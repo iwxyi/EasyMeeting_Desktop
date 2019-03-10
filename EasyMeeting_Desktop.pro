@@ -19,7 +19,8 @@ SOURCES += \
         mainwindow.cpp \
     arcfaceidutil.cpp \
     globals.cpp \
-    loginwindow.cpp
+    loginwindow.cpp \
+    networkutil.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -29,7 +30,8 @@ HEADERS += \
     include/merror.h \
     arcfaceidutil.h \
     globals.h \
-    loginwindow.h
+    loginwindow.h \
+    networkutil.h
 
 FORMS +=
 
