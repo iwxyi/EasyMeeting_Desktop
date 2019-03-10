@@ -11,9 +11,12 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QDebug>
+#include "connectutil.h"
+#include "stringutil.h"
 
 class LoginWindow : public QDialog
 {
+    Q_OBJECT
 public:
     LoginWindow(QWidget* parent = nullptr);
 
@@ -26,6 +29,7 @@ signals:
 public slots:
     void slotLogin();
     void slotRegister();
+    void slotLoginFinished(QString result);
 
 private:
     QLineEdit* username_edit;

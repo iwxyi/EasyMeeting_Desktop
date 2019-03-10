@@ -17,6 +17,9 @@ void LoginWindow::initView()
     login_btn = new QPushButton("登录", this);
     register_btn = new QPushButton("注册", this);
 
+    connect(login_btn, SIGNAL(clicked()), this, SLOT(slotLogin()));
+    connect(register_btn, SIGNAL(clicked()), this, SLOT(slotRegister()));
+
     QHBoxLayout* username_layout = new QHBoxLayout();
     username_layout->addWidget(username_label);
     username_layout->addWidget(username_edit);
@@ -53,9 +56,36 @@ void LoginWindow::slotLogin()
         QMessageBox::warning(this, "登录", "请输入用户密码");
         return ;
     }
+
+    // 开始登录
+    QStringList params;
+    params << "username" << username << "password" << password;
+
+    ConnectUtil* con = new ConnectUtil("login", params);
+    connect(con, SIGNAL(signalFinished(QString)), this, SLOT(slotLoginFinished(QString)));
+    con->start();
 }
 
 void LoginWindow::slotRegister()
 {
     QMessageBox::information(this, "注册", "本程序仅提供会议室桌面端签到，请登录《智能会议室管理系统》官网进行注册");
+}
+
+void LoginWindow::slotLoginFinished(QString content)
+{
+    QString result = getXml(content, "result");
+    if (result == "" || result == "0")
+    {
+        QMessageBox::critical(this, "登录", "登录失败！\n"+result);
+        return ;
+    }
+
+    USERNAME = username_edit->text();
+    PASSWORD = password_edit->text();
+    NICKNAME = getXml(result, "nickname");
+    USER_ID = getXml(result, "user_id");
+
+    QMessageBox::information(this, "欢迎使用", "账号"+NICKNAME+"("+USERNAME+")登录成功！");
+
+    this->close();
 }

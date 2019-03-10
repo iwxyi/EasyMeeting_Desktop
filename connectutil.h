@@ -6,31 +6,41 @@
 #include <QProcess>
 #include <QStringList>
 #include <QDesktopServices>
+#include <QDebug>
 #include "globals.h"
 #include "networkutil.h"
 
 class ConnectUtil : public QThread
 {
+    Q_OBJECT
 public:
-    ConnectUtil() { }
-
-    static void Go(QString url, QString param)
+    ConnectUtil()
     {
-        ConnectUtil connect;
-        connect.setVal(url, param);
-        connect.start();
+        _url = _param = "";
+        _params.clear();
     }
 
-    static void Go(QString url, QStringList params)
+    ConnectUtil(QString url, QString param)
     {
+        _url = url;
+        _param = param;
+    }
 
+    ConnectUtil(QString url, QStringList params)
+    {
+        _url = url;
+        _params = params;
     }
 
 protected:
     void run()
     {
         NetworkUtil net;
-        QString content = net.getHttpSource(_url, _param);
+        QString content;
+        if (_params.size() == 0)
+            content = net.getHttpSource(_url, _param);
+        else
+            content = net.getHttpSource(_url, _params);
         emit signalFinished(content);
     }
 
@@ -40,6 +50,11 @@ private:
         _url = url;
         _param = param;
     }
+    void setVal(QString url, QStringList params)
+    {
+        _url = url;
+        _params = params;
+    }
 
 signals:
     void signalFinished(QString content);
@@ -47,6 +62,7 @@ signals:
 private:
     QString _url;
     QString _param;
+    QStringList _params;
 };
 
 #endif // CONNECTUTIL_H

@@ -6,9 +6,10 @@
 extern QString APPLICATION_PATH;
 extern QString NETWORK_PATH;
 
-extern QString username;
-extern QString password;
-extern QString user_id;
-extern QString lease_id;
+extern QString USERNAME;
+extern QString PASSWORD;
+extern QString USER_ID;
+extern QString NICKNAME;
+extern QString LEASE_ID;
 
 #endif // GLOBALS_H

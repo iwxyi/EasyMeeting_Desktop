@@ -3,7 +3,8 @@
 QString APPLICATION_PATH;
 QString NETWORK_PATH;
 
-QString username;
-QString password;
-QString user_id;
-QString lease_id;
+QString USERNAME;
+QString PASSWORD;
+QString USER_ID;
+QString NICKNAME;
+QString LEASE_ID;

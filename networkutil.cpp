@@ -15,12 +15,16 @@ QString NetworkUtil::getHttpSource(QString uri, QString param)
     QEventLoop loop;
     //QTextCodec *codec;
     QNetworkReply *reply;
+    QNetworkRequest request;
 
-    reply = manager.get(QNetworkRequest(url));
-    qDebug() << "联网：" << uri << "    参数：" << param;
-    //请求结束并下载完成后，退出子事件循环
+    request.setUrl(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+
+    // reply = manager.get(QNetworkRequest(url)); // 这是GET方法
+    reply = manager.post(request, param.toLatin1());
+    qDebug() << "联网：" << (uri + "?" + param);
+
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-    //开启子事件循环
     loop.exec();
 
     QString code_content = reply->readAll();
@@ -41,7 +45,11 @@ QString NetworkUtil::getHttpSource(QString uri, QStringList params)
         if (i&1) // 奇数，是值，进行URL编码
             builder += QUrl::toPercentEncoding(params[i]);
         else // 偶数，是键
-            builder += params[i];
+        {
+            if (i > 0)
+                builder += "&";
+            builder += params[i] + "=";
+        }
     }
     return getHttpSource(uri, builder);
 }
