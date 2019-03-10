@@ -4,8 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
-
+QT       += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = EasyMeeting_Desktop
@@ -17,14 +16,20 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    arcfaceidutil.cpp \
+    globals.cpp \
+    loginwindow.cpp
 
 HEADERS += \
         mainwindow.h \
     include/amcomdef.h \
     include/arcsoft_idcardveri.h \
     include/asvloffscreen.h \
-    include/merror.h
+    include/merror.h \
+    arcfaceidutil.h \
+    globals.h \
+    loginwindow.h
 
 FORMS +=
 
@@ -42,8 +47,8 @@ unix|win32: LIBS += -L$$PWD/lib/ -llibarcsoft_idcardveri
 
 # OpenCV
 win32 {
-INCLUDEPATH += D:\OpenCV\include\
-INCLUDEPATH += D:\OpenCV\include\opencv
-INCLUDEPATH += D:\OpenCV\include\opencv2
-LIBS += D:\OpenCV\bin\libopencv_*.dll
+INCLUDEPATH += D:\Libraries\OpenCV\include\
+INCLUDEPATH += D:\Libraries\OpenCV\include\opencv
+INCLUDEPATH += D:\Libraries\OpenCV\include\opencv2
+LIBS += D:\Libraries\OpenCV\bin\libopencv_*.dll
 }
