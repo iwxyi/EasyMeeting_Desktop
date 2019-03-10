@@ -38,3 +38,24 @@ void LoginWindow::initView()
     main_layout->addLayout(password_layout);
     main_layout->addLayout(btn_layout);
 }
+
+void LoginWindow::slotLogin()
+{
+    QString username = username_edit->text();
+    QString password = password_edit->text();
+    if (username.isEmpty())
+    {
+        QMessageBox::warning(this, "登录", "请输入用户账号");
+        return ;
+    }
+    if (password.isEmpty())
+    {
+        QMessageBox::warning(this, "登录", "请输入用户密码");
+        return ;
+    }
+}
+
+void LoginWindow::slotRegister()
+{
+    QMessageBox::information(this, "注册", "本程序仅提供会议室桌面端签到，请登录《智能会议室管理系统》官网进行注册");
+}

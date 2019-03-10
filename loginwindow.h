@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QLineEdit>
 #include <QLabel>
+#include <QDebug>
 
 class LoginWindow : public QDialog
 {
@@ -19,6 +20,12 @@ public:
 private:
     void initView();
 
+signals:
+    void signalLogin();
+
+public slots:
+    void slotLogin();
+    void slotRegister();
 
 private:
     QLineEdit* username_edit;

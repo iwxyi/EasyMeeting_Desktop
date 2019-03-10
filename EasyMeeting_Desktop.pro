@@ -20,7 +20,9 @@ SOURCES += \
     arcfaceidutil.cpp \
     globals.cpp \
     loginwindow.cpp \
-    networkutil.cpp
+    networkutil.cpp \
+    stringutil.cpp \
+    fileutil.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -31,7 +33,11 @@ HEADERS += \
     arcfaceidutil.h \
     globals.h \
     loginwindow.h \
-    networkutil.h
+    networkutil.h \
+    stringutil.h \
+    fileutil.h \
+    settings.h \
+    connectutil.h
 
 FORMS +=
 
