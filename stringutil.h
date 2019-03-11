@@ -14,6 +14,7 @@ QString fnDecode(QString text); // 文件名解码
 bool canRegExp(QString str, QString pat); // 能否正则匹配
 
 QString getXml(QString str, QString pat);
+QStringList getXmls(QString str, QString pat);
 QString makeXml(QString str, QString pat);
 QString makeXml(int i, QString pat);
 

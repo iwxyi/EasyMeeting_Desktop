@@ -85,12 +85,13 @@ void LoginWindow::slotLoginFinished(QString content)
         return ;
     }
 
-    USERNAME = username_edit->text();
-    PASSWORD = password_edit->text();
-    NICKNAME = getXml(result, "nickname");
-    USER_ID = getXml(result, "user_id");
+    user.username = username_edit->text();
+    user.password = password_edit->text();
+    user.nickname = getXml(content, "nickname");
+    user.user_id = getXml(content, "user_id");
+    qDebug() << "登录成功 : " << "user_id:" << user.user_id << "    nickname:" << user.nickname;
 
-    QMessageBox::information(this, "欢迎使用", "账号"+NICKNAME+"("+USERNAME+")登录成功！");
+    emit signalLoginFinished();
 
     this->close();
 }

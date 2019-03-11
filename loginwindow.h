@@ -24,7 +24,7 @@ private:
     void initView();
 
 signals:
-    void signalLogin();
+    void signalLoginFinished();
 
 public slots:
     void slotLogin();

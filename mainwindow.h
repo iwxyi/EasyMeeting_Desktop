@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include "globals.h"
 #include "loginwindow.h"
+#include "leasewindow.h"
 
 class MainWindow : public QMainWindow
 {
@@ -22,7 +23,26 @@ public:
 private:
     void initView();
     void initData();
-    void judgeAccount();
+
+    void gotoLogin();
+    void gotoChoose();
+
+public slots:
+    void slotLoginFinished();
+    void slotChooseLease();
+    void slotChooseLeasesFinished(QString choosen);
+    void slotExit();
+
+private:
+    QPushButton* nickname_btn; // 用户昵称按钮
+    QPushButton* lease_btn;    // 切换订单按钮
+    QPushButton* exit_btn;     // 退出程序按钮
+
+    QPushButton* meeting_name_btn; // 会议名字按钮
+    QPushButton* num_btn;          // 人数情况按钮
+
+    QPushButton* check_btn; // 签到按钮
+    QPushButton* leave_btn; // 签退按钮
 
 };
 

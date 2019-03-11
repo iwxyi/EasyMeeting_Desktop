@@ -23,7 +23,8 @@ SOURCES += \
     loginwindow.cpp \
     networkutil.cpp \
     stringutil.cpp \
-    fileutil.cpp
+    fileutil.cpp \
+    leasewindow.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,7 +39,9 @@ HEADERS += \
     stringutil.h \
     fileutil.h \
     settings.h \
-    connectutil.h
+    connectutil.h \
+    user.h \
+    leasewindow.h
 
 FORMS +=
 

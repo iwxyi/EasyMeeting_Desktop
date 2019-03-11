@@ -57,6 +57,11 @@ QString getXml(QString str, QString pat)
     return str.mid(pos1, pos2-pos1);
 }
 
+QStringList getXmls(QString str, QString pat)
+{
+    return getStrMids(str, "<"+pat+">", "</"+pat+">");
+}
+
 QString makeXml(QString str, QString pat)
 {
     return QString("<%1>%2</%3>").arg(pat).arg(str).arg(pat);

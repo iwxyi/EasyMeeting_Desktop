@@ -2,15 +2,12 @@
 #define GLOBALS_H
 
 #include <QString>
+#include "user.h"
 
 extern QString APPLICATION_PATH;
 extern QString NETWORK_PATH;
 extern bool DEBUG_MODE;
 
-extern QString USERNAME;
-extern QString PASSWORD;
-extern QString USER_ID;
-extern QString NICKNAME;
-extern QString LEASE_ID;
+extern User user;
 
 #endif // GLOBALS_H
