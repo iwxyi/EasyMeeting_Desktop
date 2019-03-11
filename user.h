@@ -13,6 +13,8 @@ public :
     QString password;
     QString nickname;
 
+    QString lease_id;
+
 };
 
 #endif // USER_H

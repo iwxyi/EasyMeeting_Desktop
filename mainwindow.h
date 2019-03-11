@@ -30,7 +30,7 @@ private:
 public slots:
     void slotLoginFinished();
     void slotChooseLease();
-    void slotChooseLeasesFinished(QString choosen);
+    void slotChooseLeaseFinished(QString choosen);
     void slotExit();
 
 private:

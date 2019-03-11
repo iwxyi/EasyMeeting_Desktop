@@ -11,6 +11,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QStringListModel>
+#include <QList>
 #include "stringutil.h"
 #include "globals.h"
 #include "connectutil.h"
@@ -28,8 +30,9 @@ public:
 signals:
     void signalChooseLeaseFinished(QString result);
 
-public slots:
-    void slotGetLeaseFinished(QString choosen);
+private slots:
+    void slotConnectLeasesFinished(QString result);
+    void slotChooseBtnClicked();
 
 private:
     QStringList leases;

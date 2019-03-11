@@ -100,9 +100,9 @@ void MainWindow::slotChooseLease()
     gotoLogin();
 }
 
-void MainWindow::slotChooseLeasesFinished(QString choosen)
+void MainWindow::slotChooseLeaseFinished(QString choosen)
 {
-
+    qDebug() << "选择的租约：" << choosen;
 }
 
 void MainWindow::slotExit()

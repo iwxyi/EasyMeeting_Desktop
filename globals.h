@@ -10,4 +10,6 @@ extern bool DEBUG_MODE;
 
 extern User user;
 
+extern qint64 getTimestamp();
+
 #endif // GLOBALS_H
