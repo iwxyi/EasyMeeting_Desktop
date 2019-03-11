@@ -20,7 +20,6 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
 
 private:
-    void initCore();
     void initView();
     void initData();
     void judgeAccount();

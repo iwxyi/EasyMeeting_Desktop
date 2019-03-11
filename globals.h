@@ -5,6 +5,7 @@
 
 extern QString APPLICATION_PATH;
 extern QString NETWORK_PATH;
+extern bool DEBUG_MODE;
 
 extern QString USERNAME;
 extern QString PASSWORD;

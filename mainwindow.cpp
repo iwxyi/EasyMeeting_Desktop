@@ -3,18 +3,9 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow (parent)
 {
-    initCore();
-
     initView();
 
     judgeAccount();
-}
-
-void MainWindow::initCore()
-{
-    APPLICATION_PATH = QApplication::applicationDirPath();
-    if (!APPLICATION_PATH.endsWith("/")) APPLICATION_PATH += "/";
-    NETWORK_PATH = "http://127.0.0.1/EasyMeeting/public/index.php/Android/Client/";
 }
 
 void MainWindow::initView()

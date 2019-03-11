@@ -18,19 +18,27 @@ public:
     {
         _url = _param = "";
         _params.clear();
+        _func = nullptr;
     }
 
     ConnectUtil(QString url, QString param)
     {
         _url = url;
         _param = param;
+        _func = nullptr;
+
+        this->start();
     }
 
     ConnectUtil(QString url, QStringList params)
     {
         _url = url;
         _params = params;
+        _func = nullptr;
+
+        this->start();
     }
+
 
 protected:
     void run()
@@ -42,6 +50,10 @@ protected:
         else
             content = net.getHttpSource(_url, _params);
         emit signalFinished(content);
+        if (_func != nullptr)
+        {
+            _func(content);
+        }
     }
 
 private:
@@ -55,6 +67,10 @@ private:
         _url = url;
         _params = params;
     }
+    void setVal(void(*func)(QString))
+    {
+        _func = func;
+    }
 
 signals:
     void signalFinished(QString content);
@@ -63,6 +79,7 @@ private:
     QString _url;
     QString _param;
     QStringList _params;
+    void (*_func)(QString);
 };
 
 #endif // CONNECTUTIL_H

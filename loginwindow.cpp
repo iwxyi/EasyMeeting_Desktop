@@ -17,6 +17,13 @@ void LoginWindow::initView()
     login_btn = new QPushButton("登录", this);
     register_btn = new QPushButton("注册", this);
 
+    if (DEBUG_MODE)
+    {
+        username_edit->setText("user0");
+        password_edit->setText("0");
+    }
+    password_edit->setEchoMode(QLineEdit::Password);
+
     connect(login_btn, SIGNAL(clicked()), this, SLOT(slotLogin()));
     connect(register_btn, SIGNAL(clicked()), this, SLOT(slotRegister()));
 
@@ -58,12 +65,10 @@ void LoginWindow::slotLogin()
     }
 
     // 开始登录
-    QStringList params;
-    params << "username" << username << "password" << password;
+    QStringList params = { "username", username, "password", password };
 
     ConnectUtil* con = new ConnectUtil("login", params);
     connect(con, SIGNAL(signalFinished(QString)), this, SLOT(slotLoginFinished(QString)));
-    con->start();
 }
 
 void LoginWindow::slotRegister()

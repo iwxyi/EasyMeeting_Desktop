@@ -2,6 +2,7 @@
 
 QString APPLICATION_PATH;
 QString NETWORK_PATH;
+bool DEBUG_MODE;
 
 QString USERNAME;
 QString PASSWORD;
