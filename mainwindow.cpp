@@ -17,10 +17,14 @@ void MainWindow::initView()
     exit_btn = new QPushButton("退出", this);
     meeting_name_btn = new QPushButton("会议", this);
     num_btn = new QPushButton("人数情况", this);
+    refresh_card_btn = new QPushButton("刷新证件照", this);
     check_btn = new QPushButton("签到", this);
     leave_btn = new QPushButton("签退", this);
 
+    connect(nickname_btn, SIGNAL(clicked()), this, SLOT(slotUserBtnClicked()));
     connect(lease_btn, SIGNAL(clicked()), this, SLOT(slotChooseLease()));
+    connect(exit_btn, SIGNAL(clicked()), this, SLOT(slotExit()));
+    connect(refresh_card_btn, SIGNAL(clicked()), this, SLOT(slotRefreshCards()));
 
     QHBoxLayout* top_layout = new QHBoxLayout;
     top_layout->addWidget(nickname_btn);
@@ -39,12 +43,14 @@ void MainWindow::initView()
         QVBoxLayout* situation_layout = new QVBoxLayout;
         situation_layout->addWidget(meeting_name_btn);
         situation_layout->addWidget(num_btn);
+        situation_layout->addWidget(refresh_card_btn);
         mid_layout->addLayout(situation_layout);
     }
 
     QVBoxLayout* main_layout = new QVBoxLayout;
     main_layout->addLayout(top_layout);
     main_layout->addLayout(mid_layout);
+    main_layout->addStretch();
 
     QWidget* widget = new QWidget(this);
     this->setCentralWidget(widget);
@@ -91,6 +97,14 @@ void MainWindow::gotoChoose()
     lease_window->show();
 }
 
+void MainWindow::slotUserBtnClicked()
+{
+    if (user.isLogin())
+        QMessageBox::information(this, "提示", "若要退出或者切换账号，请点击退出按钮");
+    else
+        gotoLogin();
+}
+
 /**
  * 切换Lease，必须要先登录
  * 避免被别人恶意切换
@@ -102,10 +116,40 @@ void MainWindow::slotChooseLease()
 
 void MainWindow::slotChooseLeaseFinished(QString choosen)
 {
-    qDebug() << "选择的租约：" << choosen;
+    meeting_name_btn->setText(getXml(choosen, "theme"));
+    this->setWindowTitle(getXml(choosen, "room_name"));
 }
 
 void MainWindow::slotExit()
 {
+    if (!user.isLogin())
+    {
+        this->close();
+        return ;
+    }
+
+    bool isOK;
+    QString text = QInputDialog::getText(nullptr, "请输入密码", "为保护会议安全，请输入用户（"+user.username+"）的密码", QLineEdit::Normal, "", &isOK);
+    if (isOK)
+    {
+        if (text == user.password)
+        {
+            this->close();
+        }
+        else
+        {
+            QMessageBox::warning(this, "错误", "密码输入错误,请重试");
+        }
+    }
+}
+
+void MainWindow::slotRefreshCards()
+{
 
 }
+
+
+
+
+
+

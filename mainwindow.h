@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <QFile>
 #include <QMessageBox>
+#include <QInputDialog>
 #include "globals.h"
 #include "loginwindow.h"
 #include "leasewindow.h"
@@ -28,10 +29,12 @@ private:
     void gotoChoose();
 
 public slots:
+    void slotUserBtnClicked();
     void slotLoginFinished();
     void slotChooseLease();
     void slotChooseLeaseFinished(QString choosen);
     void slotExit();
+    void slotRefreshCards();
 
 private:
     QPushButton* nickname_btn; // 用户昵称按钮
@@ -40,6 +43,7 @@ private:
 
     QPushButton* meeting_name_btn; // 会议名字按钮
     QPushButton* num_btn;          // 人数情况按钮
+    QPushButton* refresh_card_btn; // 证件照刷新按钮
 
     QPushButton* check_btn; // 签到按钮
     QPushButton* leave_btn; // 签退按钮
