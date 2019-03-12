@@ -13,7 +13,6 @@ void MainWindow::initView()
     this->resize(600, 600);
 
     nickname_btn = new QPushButton("昵称", this);
-    lease_btn = new QPushButton("租约", this);
     exit_btn = new QPushButton("退出", this);
     meeting_name_btn = new QPushButton("会议", this);
     num_btn = new QPushButton("人数情况", this);
@@ -21,14 +20,12 @@ void MainWindow::initView()
     check_btn = new QPushButton("签到", this);
     leave_btn = new QPushButton("签退", this);
 
-    connect(nickname_btn, SIGNAL(clicked()), this, SLOT(slotUserBtnClicked()));
-    connect(lease_btn, SIGNAL(clicked()), this, SLOT(slotChooseLease()));
+    connect(nickname_btn, SIGNAL(clicked()), this, SLOT(slotChooseLease()));
     connect(exit_btn, SIGNAL(clicked()), this, SLOT(slotExit()));
     connect(refresh_card_btn, SIGNAL(clicked()), this, SLOT(slotRefreshCards()));
 
     QHBoxLayout* top_layout = new QHBoxLayout;
     top_layout->addWidget(nickname_btn);
-    top_layout->addWidget(lease_btn);
     top_layout->addStretch();
     top_layout->addWidget(exit_btn);
 
@@ -92,17 +89,15 @@ void MainWindow::slotLoginFinished()
  */
 void MainWindow::gotoChoose()
 {
+    if (!user.isLogin())
+    {
+        gotoLogin();
+        return ;
+    }
+
     LeaseWindow* lease_window = new LeaseWindow(this);
     connect(lease_window, SIGNAL(signalChooseLeaseFinished(QString)), this, SLOT(slotChooseLeaseFinished(QString)));
     lease_window->show();
-}
-
-void MainWindow::slotUserBtnClicked()
-{
-    if (user.isLogin())
-        QMessageBox::information(this, "提示", "若要退出或者切换账号，请点击退出按钮");
-    else
-        gotoLogin();
 }
 
 /**

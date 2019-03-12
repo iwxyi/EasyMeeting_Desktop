@@ -18,6 +18,7 @@ LeaseWindow::LeaseWindow(QWidget *parent) : QDialog(parent)
 void LeaseWindow::initView()
 {
     this->setMinimumSize(150, 250);
+    this->setWindowTitle("请选择租约");
 
     list_view = new QListView(this);
     choose_btn = new QPushButton("选择", this);

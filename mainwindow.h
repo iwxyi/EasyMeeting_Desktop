@@ -29,7 +29,6 @@ private:
     void gotoChoose();
 
 public slots:
-    void slotUserBtnClicked();
     void slotLoginFinished();
     void slotChooseLease();
     void slotChooseLeaseFinished(QString choosen);
@@ -38,7 +37,6 @@ public slots:
 
 private:
     QPushButton* nickname_btn; // 用户昵称按钮
-    QPushButton* lease_btn;    // 切换订单按钮
     QPushButton* exit_btn;     // 退出程序按钮
 
     QPushButton* meeting_name_btn; // 会议名字按钮
