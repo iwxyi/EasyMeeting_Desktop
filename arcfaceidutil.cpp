@@ -58,6 +58,10 @@ bool ArcFaceIdUtil::Compare(QString path_face, QString path_card)
     if (res != MOK)
     {
         qDebug() << "Face Feature Extraction failed, error code: " << res;
+        /* 这个地方很可能会失败，所以特别释放内存 */
+        free(pFaceRes);
+        free(imgInfo0.ppu8Plane[0]);
+        ArcSoft_FIC_UninitialEngine(hEngine);
         return false;
     }
 
@@ -114,7 +118,7 @@ bool ArcFaceIdUtil::Compare(QString path_face, QString path_card)
     free(imgInfo0.ppu8Plane[0]);	//video模式下如果在compare接口之前图像数据被释放可能会导致比对失败或carsh
     free(imgInfo1.ppu8Plane[0]);
 
-    return res;
+    return pResult;
 }
 
 bool ArcFaceIdUtil::Compare(QString path_face, QStringList paths_card)
@@ -125,6 +129,6 @@ bool ArcFaceIdUtil::Compare(QString path_face, QStringList paths_card)
 QSize ArcFaceIdUtil::getImageSize(QString path)
 {
     QImage image(path);
-    qDebug() << "获取图片尺寸 path:" << path << "    size:" << image.size();
+    //qDebug() << "获取图片尺寸 path:" << path << "    size:" << image.size();
     return image.size();
 }

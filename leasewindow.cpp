@@ -100,7 +100,7 @@ void LeaseWindow::slotChooseBtnClicked()
     int finish_time = getXml(lease, "finish_time").toInt();
     int current_time = getTimestamp() / 1000; // 秒级时间戳
 
-    qDebug() << "选择租约订单：current:" << current_time <<    "start_time:" << start_time << "    finish_time:" << finish_time;
+    qDebug() << "选择租约订单：" << getXml(lease, "theme") << "current:" << current_time <<    "start_time:" << start_time << "    finish_time:" << finish_time;
 
     if (!DEBUG_MODE)
     {

@@ -110,7 +110,6 @@ void MainWindow::gotoLogin()
  */
 void MainWindow::slotLoginFinished()
 {
-    qDebug() << "登录结束";
     // 登录成功，获取LEASE_ID列表
     if (user.isLogin())
     {
@@ -233,16 +232,15 @@ void MainWindow::slotCameraImageCaptured(int id, QImage image)
     QString face_path = APPLICATION_PATH+"captured.bmp";
     image.save(face_path);
 
-    if (ArcFaceIdUtil::Compare("T:\\camera_test.bmp", "T:\\card0.bmp")) // 验证通过
+    if (ArcFaceIdUtil::Compare(face_path, cards_dir+"/default.bmp")) // 验证通过
     {
-
+        qDebug() << "是同一个人";
     }
-    else // 验证没有通过
+    else // 验证没有通过（不是同一个人）
     {
-
+        qDebug() << "不是同一个人";
     }
-    //ArcFaceIdUtil::Compare(cards_dir+"/camera_test.bmp", cards_dir+"/default.bmp");
-    //ArcFaceIdUtil::Compare(face_path, cards_dir+"/default.bmp");
+
 }
 
 void MainWindow::slotSwitchCheckLeave()

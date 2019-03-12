@@ -22,7 +22,7 @@ QString NetworkUtil::getHttpSource(QString uri, QString param)
 
     // reply = manager.get(QNetworkRequest(url)); // 这是GET方法
     reply = manager.post(request, param.toLatin1());
-    qDebug() << "联网：" << (uri + "?" + param);
+    //qDebug() << "联网：" << (uri + "?" + param);
 
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
