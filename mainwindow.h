@@ -13,6 +13,9 @@
 #include <QCamera>
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include "globals.h"
 #include "loginwindow.h"
 #include "leasewindow.h"

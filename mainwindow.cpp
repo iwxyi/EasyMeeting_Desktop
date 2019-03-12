@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow (parent)
 
 void MainWindow::initView()
 {
-    this->resize(600, 600);
+    this->resize(800, 600);
 
     // 创建控件
     nickname_btn = new QPushButton("昵称", this);
@@ -151,6 +151,12 @@ void MainWindow::slotChooseLease()
 
 void MainWindow::slotChooseLeaseFinished(QString choosen)
 {
+    user.lease_id = getXml(choosen, "lease_id");
+
+    QString path = APPLICATION_PATH + "cards/" + user.lease_id;
+    QDir dir(path);
+    dir.mkpath(path);
+
     meeting_name_btn->setText(getXml(choosen, "theme"));
     this->setWindowTitle(getXml(choosen, "room_name"));
     camera->start();
@@ -181,7 +187,40 @@ void MainWindow::slotExit()
 
 void MainWindow::slotRefreshCards()
 {
+    if (!user.isLogin())
+    {
+        QMessageBox::warning(this, "提示", "请先登录并选择一个租约");
+        return ;
+    }
 
+    QString path = APPLICATION_PATH + "cards/" + user.lease_id;
+    QDir dir(path);
+    int count = 0;
+    foreach(QFileInfo fi, dir.entryInfoList())
+    {
+        if (fi.isFile())
+        {
+            qDebug() << "find image : " << fi.fileName();
+            count++;
+        }
+        else if (fi.fileName() == "." || fi.fileName() == "..")
+        {
+            continue;
+        }
+        else
+        {
+            qDebug() << "find dir : " << fi.absoluteFilePath();
+        }
+    }
+
+    if (count == 0)
+    {
+        QMessageBox::information(this, "证件照", "请将证件照放到路径：" + path + "中，人脸识别将自动匹配");
+    }
+    else
+    {
+        QMessageBox::information(this, "刷新结果", "获取到" + QString("%1").arg(count) + "张证件照");
+    }
 }
 
 void MainWindow::slotCameraImageCaptured(int, QImage)

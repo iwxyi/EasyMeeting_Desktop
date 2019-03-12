@@ -31,7 +31,7 @@ QString NetworkUtil::getHttpSource(QString uri, QString param)
     //codec = QTextCodec::codecForHtml(code_content.toLatin1());
     //code_content = codec->toUnicode(code_content.toLatin1());
 
-    qDebug() << "返回：" << code_content;
+    //qDebug() << "返回：" << code_content;
 
     return code_content;
 }
