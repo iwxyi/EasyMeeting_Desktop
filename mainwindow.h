@@ -10,6 +10,9 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QCamera>
+#include <QCameraViewfinder>
+#include <QCameraImageCapture>
 #include "globals.h"
 #include "loginwindow.h"
 #include "leasewindow.h"
@@ -34,6 +37,8 @@ public slots:
     void slotChooseLeaseFinished(QString choosen);
     void slotExit();
     void slotRefreshCards();
+    void slotCameraImageCaptured(int, QImage);
+    void slotSwitchCheckLeave();
 
 private:
     QPushButton* nickname_btn; // 用户昵称按钮
@@ -45,6 +50,11 @@ private:
 
     QPushButton* check_btn; // 签到按钮
     QPushButton* leave_btn; // 签退按钮
+
+    QCamera* camera;
+    QCameraViewfinder* finder;
+    QCameraImageCapture* capture;
+    QPushButton* identify_btn;
 
 };
 

@@ -12,6 +12,7 @@ void MainWindow::initView()
 {
     this->resize(600, 600);
 
+    // 创建控件
     nickname_btn = new QPushButton("昵称", this);
     exit_btn = new QPushButton("退出", this);
     meeting_name_btn = new QPushButton("会议", this);
@@ -19,23 +20,46 @@ void MainWindow::initView()
     refresh_card_btn = new QPushButton("刷新证件照", this);
     check_btn = new QPushButton("签到", this);
     leave_btn = new QPushButton("签退", this);
+    camera = new QCamera(this);
+    finder = new QCameraViewfinder(this);
+    capture = new QCameraImageCapture(camera);
+    identify_btn = new QPushButton("识别", this);
 
+    // 设置属性
+    capture->setCaptureDestination(QCameraImageCapture::CaptureToFile);
+    camera->setCaptureMode(QCamera::CaptureStillImage);
+    camera->setViewfinder(finder);
+    finder->setMinimumSize(500, 400);
+    check_btn->setEnabled(false); // 默认开启签到模式
+
+    // 连接信号槽
     connect(nickname_btn, SIGNAL(clicked()), this, SLOT(slotChooseLease()));
     connect(exit_btn, SIGNAL(clicked()), this, SLOT(slotExit()));
     connect(refresh_card_btn, SIGNAL(clicked()), this, SLOT(slotRefreshCards()));
+    connect(capture, SIGNAL(imageCaptured(int, QImage)), this, SLOT(slotCameraImageCaptured(int, QImage)));
+    connect(check_btn, SIGNAL(clicked()), this, SLOT(slotSwitchCheckLeave()));
+    connect(leave_btn, SIGNAL(clicked()), this, SLOT(slotSwitchCheckLeave()));
 
+    // 顶部布局
     QHBoxLayout* top_layout = new QHBoxLayout;
     top_layout->addWidget(nickname_btn);
     top_layout->addStretch();
     top_layout->addWidget(exit_btn);
 
+    // 中间布局
     QHBoxLayout* mid_layout = new QHBoxLayout;
+    // 中间左半部分布局
     {
-        QHBoxLayout* camera_layout = new QHBoxLayout;
-        camera_layout->addWidget(check_btn);
-        camera_layout->addWidget(leave_btn);
+        QVBoxLayout* camera_layout = new QVBoxLayout;
+        QHBoxLayout* camera_btn_layout = new QHBoxLayout;
+        camera_btn_layout->addWidget(check_btn);
+        camera_btn_layout->addWidget(leave_btn);
+        camera_layout->addLayout(camera_btn_layout);
+        camera_layout->addWidget(finder);
         mid_layout->addLayout(camera_layout);
+
     }
+    // 中间右半部分布局
     {
         QVBoxLayout* situation_layout = new QVBoxLayout;
         situation_layout->addWidget(meeting_name_btn);
@@ -44,6 +68,7 @@ void MainWindow::initView()
         mid_layout->addLayout(situation_layout);
     }
 
+    // 总体布局（分上下两层）
     QVBoxLayout* main_layout = new QVBoxLayout;
     main_layout->addLayout(top_layout);
     main_layout->addLayout(mid_layout);
@@ -113,6 +138,7 @@ void MainWindow::slotChooseLeaseFinished(QString choosen)
 {
     meeting_name_btn->setText(getXml(choosen, "theme"));
     this->setWindowTitle(getXml(choosen, "room_name"));
+    camera->start();
 }
 
 void MainWindow::slotExit()
@@ -141,6 +167,25 @@ void MainWindow::slotExit()
 void MainWindow::slotRefreshCards()
 {
 
+}
+
+void MainWindow::slotCameraImageCaptured(int, QImage)
+{
+
+}
+
+void MainWindow::slotSwitchCheckLeave()
+{
+    if (check_btn->isEnabled()) // 切换到签到模式
+    {
+        check_btn->setEnabled(false);
+        leave_btn->setEnabled(true);
+    }
+    else // 切换到签退模式
+    {
+        check_btn->setEnabled(true);
+        leave_btn->setEnabled(false);
+    }
 }
 
 
