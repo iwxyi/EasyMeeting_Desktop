@@ -21,6 +21,7 @@ void LoginWindow::initView()
     {
         username_edit->setText("user0");
         password_edit->setText("0");
+        login_btn->setFocusPolicy(Qt::ClickFocus);
     }
     password_edit->setEchoMode(QLineEdit::Password);
 

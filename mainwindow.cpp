@@ -49,6 +49,7 @@ void MainWindow::initView()
     connect(capture, SIGNAL(imageCaptured(int, QImage)), this, SLOT(slotCameraImageCaptured(int, QImage)));
     connect(check_btn, SIGNAL(clicked()), this, SLOT(slotSwitchCheckLeave()));
     connect(leave_btn, SIGNAL(clicked()), this, SLOT(slotSwitchCheckLeave()));
+    connect(identify_btn, SIGNAL(clicked()), this, SLOT(slotIdentifyBtnClicked()));
 
     // 顶部布局
     QHBoxLayout* top_layout = new QHBoxLayout;
@@ -153,9 +154,9 @@ void MainWindow::slotChooseLeaseFinished(QString choosen)
 {
     user.lease_id = getXml(choosen, "lease_id");
 
-    QString path = APPLICATION_PATH + "cards/" + user.lease_id;
-    QDir dir(path);
-    dir.mkpath(path);
+    cards_dir = APPLICATION_PATH + "cards/" + user.lease_id;
+    QDir dir(cards_dir);
+    dir.mkpath(cards_dir);
 
     meeting_name_btn->setText(getXml(choosen, "theme"));
     this->setWindowTitle(getXml(choosen, "room_name"));
@@ -193,8 +194,7 @@ void MainWindow::slotRefreshCards()
         return ;
     }
 
-    QString path = APPLICATION_PATH + "cards/" + user.lease_id;
-    QDir dir(path);
+    QDir dir(cards_dir);
     int count = 0;
     foreach(QFileInfo fi, dir.entryInfoList())
     {
@@ -215,7 +215,7 @@ void MainWindow::slotRefreshCards()
 
     if (count == 0)
     {
-        QMessageBox::information(this, "证件照", "请将证件照放到路径：" + path + "中，人脸识别将自动匹配");
+        QMessageBox::information(this, "证件照", "请将证件照放到路径：" + cards_dir + "中，人脸识别将自动匹配");
     }
     else
     {
@@ -223,9 +223,26 @@ void MainWindow::slotRefreshCards()
     }
 }
 
-void MainWindow::slotCameraImageCaptured(int, QImage)
+void MainWindow::slotIdentifyBtnClicked()
 {
+    capture->capture();
+}
 
+void MainWindow::slotCameraImageCaptured(int id, QImage image)
+{
+    QString face_path = APPLICATION_PATH+"captured.bmp";
+    image.save(face_path);
+
+    if (ArcFaceIdUtil::Compare("T:\\camera_test.bmp", "T:\\card0.bmp")) // 验证通过
+    {
+
+    }
+    else // 验证没有通过
+    {
+
+    }
+    //ArcFaceIdUtil::Compare(cards_dir+"/camera_test.bmp", cards_dir+"/default.bmp");
+    //ArcFaceIdUtil::Compare(face_path, cards_dir+"/default.bmp");
 }
 
 void MainWindow::slotSwitchCheckLeave()

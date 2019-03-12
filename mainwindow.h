@@ -19,6 +19,7 @@
 #include "globals.h"
 #include "loginwindow.h"
 #include "leasewindow.h"
+#include "arcfaceidutil.h"
 
 class MainWindow : public QMainWindow
 {
@@ -41,7 +42,8 @@ public slots:
     void slotChooseLeaseFinished(QString choosen);
     void slotExit();
     void slotRefreshCards();
-    void slotCameraImageCaptured(int, QImage);
+    void slotCameraImageCaptured(int id, QImage image);
+    void slotIdentifyBtnClicked();
     void slotSwitchCheckLeave();
 
 private:
@@ -59,6 +61,8 @@ private:
     QCameraViewfinder* finder;
     QCameraImageCapture* capture;
     QPushButton* identify_btn;
+
+    QString cards_dir;
 
 };
 

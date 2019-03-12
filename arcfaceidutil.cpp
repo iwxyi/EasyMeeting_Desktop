@@ -41,7 +41,7 @@ bool ArcFaceIdUtil::Compare(QString path_face, QString path_card)
     imgInfo0.pi32Pitch[0] = imgInfo0.i32Width * 3 ;
     imgInfo0.ppu8Plane[0] = (MUInt8*)malloc(imgInfo0.i32Height*imgInfo0.pi32Pitch[0]);
 
-    FILE* fp1 = fopen(path_card.toLatin1().data(), "rb");
+    FILE* fp1 = fopen(path_face.toLatin1().data(), "rb");
     if (fp1)
     {
         fread(imgInfo0.ppu8Plane[0], imgInfo0.i32Height*imgInfo0.pi32Pitch[0], 1, fp1);
@@ -125,6 +125,6 @@ bool ArcFaceIdUtil::Compare(QString path_face, QStringList paths_card)
 QSize ArcFaceIdUtil::getImageSize(QString path)
 {
     QImage image(path);
-    qDebug() << "path:" << path << "    size:" << image.size();
+    qDebug() << "获取图片尺寸 path:" << path << "    size:" << image.size();
     return image.size();
 }

@@ -102,10 +102,13 @@ void LeaseWindow::slotChooseBtnClicked()
 
     qDebug() << "选择租约订单：current:" << current_time <<    "start_time:" << start_time << "    finish_time:" << finish_time;
 
-    if (finish_time < current_time - 1800) // 允许延迟半小时
-        QMessageBox::warning(this, "警告", "本会议已经过期，但为方便演示，将强行允许");
-    else if (start_time > current_time + 3600 * 2)
-        QMessageBox::warning(this, "警告", "本会议时间未到，但为方便演示，将强行允许");
+    if (!DEBUG_MODE)
+    {
+        if (finish_time < current_time - 1800) // 允许延迟半小时
+            QMessageBox::warning(this, "警告", "本会议已经过期，但为方便演示，将强行允许");
+        else if (start_time > current_time + 3600 * 2)
+            QMessageBox::warning(this, "警告", "本会议时间未到，但为方便演示，将强行允许");
+    }
 
     emit signalChooseLeaseFinished(lease);
 
