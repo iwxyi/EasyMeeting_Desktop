@@ -30,6 +30,7 @@ private:
 
     void gotoLogin();
     void gotoChoose();
+    void startIdentify();
 
 public slots:
     void slotLoginFinished();

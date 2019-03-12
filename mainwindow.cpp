@@ -23,14 +23,24 @@ void MainWindow::initView()
     camera = new QCamera(this);
     finder = new QCameraViewfinder(this);
     capture = new QCameraImageCapture(camera);
-    identify_btn = new QPushButton("识别", this);
+    identify_btn = new QPushButton("人证识别", this);
 
     // 设置属性
     capture->setCaptureDestination(QCameraImageCapture::CaptureToFile);
     camera->setCaptureMode(QCamera::CaptureStillImage);
     camera->setViewfinder(finder);
     finder->setMinimumSize(500, 400);
+
+    // 设置按钮
     check_btn->setEnabled(false); // 默认开启签到模式
+    nickname_btn->setToolTip("登录账号后选择会议");
+    exit_btn->setToolTip("退出程序；本次记录将会保留");
+    meeting_name_btn->setToolTip("本次会议主题；可以在APP或者官网上修改");
+    num_btn->setToolTip("已到人数/总人数");
+    refresh_card_btn->setToolTip("刷新所有与会人员证件；图片放到 【"+APPLICATION_PATH+"cards/订单ID/】 文件夹中");
+    check_btn->setToolTip("切换到签到模式");
+    leave_btn->setToolTip("切换到签退模式");
+    identify_btn->setToolTip("开始人证识别");
 
     // 连接信号槽
     connect(nickname_btn, SIGNAL(clicked()), this, SLOT(slotChooseLease()));
@@ -56,8 +66,8 @@ void MainWindow::initView()
         camera_btn_layout->addWidget(leave_btn);
         camera_layout->addLayout(camera_btn_layout);
         camera_layout->addWidget(finder);
+        camera_layout->addWidget(identify_btn);
         mid_layout->addLayout(camera_layout);
-
     }
     // 中间右半部分布局
     {
@@ -123,6 +133,11 @@ void MainWindow::gotoChoose()
     LeaseWindow* lease_window = new LeaseWindow(this);
     connect(lease_window, SIGNAL(signalChooseLeaseFinished(QString)), this, SLOT(slotChooseLeaseFinished(QString)));
     lease_window->show();
+}
+
+void MainWindow::startIdentify()
+{
+
 }
 
 /**
