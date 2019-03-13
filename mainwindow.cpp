@@ -149,8 +149,9 @@ void MainWindow::startCompare(QString face_path)
     {
         if (fi.isFile())
         {
-            QString file_name = fi.fileName();
+            QString file_name = fi.filePath();
             QString base_name = fi.baseName();
+            qDebug() << "filename:" << file_name;
             int code = ArcFaceIdUtil::Compare(face_path, file_name);
             if (code == 0) // 不是这个人
             {
@@ -172,6 +173,7 @@ void MainWindow::startCompare(QString face_path)
             }
         }
     }
+    result_label->setText("识别失败，请重试");
 }
 
 void MainWindow::refreshChecked()
