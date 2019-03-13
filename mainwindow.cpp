@@ -35,6 +35,8 @@ void MainWindow::initView()
     camera->setViewfinder(finder);
     finder->setMinimumSize(500, 400);
     meeting_name_btn->setFont(QFont("微软雅黑", 20));
+    num_btn->setFont(QFont("微软雅黑", 20));
+    identify_btn->setFont(QFont("微软雅黑", 20));
     result_label->setFont(QFont("微软雅黑", 20));
     result_label->setAlignment(Qt::AlignCenter);
 
@@ -148,31 +150,44 @@ void MainWindow::gotoChoose()
 
 void MainWindow::refreshChecked()
 {
-    num_btn->setText(QString("%1 / %2").arg(user.arrive).arg(user.all_num));
+    num_btn->setText(QString("%1 / %2").arg(checked_list.size()).arg(user.all_num));
 }
 
 void MainWindow::particiChecked(QString name)
 {
+    checked_list.removeOne(name); // 避免已经签到过了
     checked_list.append(name);
+    refreshChecked();
+    saveChecked();
 }
 
 void MainWindow::particiLeaved(QString name)
 {
     checked_list.removeOne(name);
+    refreshChecked();
+    saveChecked();
 }
 
-void MainWindow::closeEvent(QCloseEvent * event)
+void MainWindow::saveChecked()
 {
-    if (can_close || !user.isLogin())
+    QString str = "";
+    for (int i = 0; i < checked_list.size(); i++)
     {
-        //event->accept();
-        this->close();
+        str += checked_list[i] + "==||==";
     }
-    else
-    {
-        event->ignore();
-        slotExit();
-    }
+    Settings st(APPLICATION_PATH+"settings.ini");
+    st.setVal("lease_"+QString("%1").arg(user.lease_id), str);
+    st.sync();
+}
+
+void MainWindow::restoreChecked()
+{
+    checked_list.clear();
+    Settings st(APPLICATION_PATH+"settings.ini");
+    QString str = st.getStr("lease_"+QString("%1").arg(user.lease_id));
+    checked_list = str.split("==||==", QString::SkipEmptyParts);
+
+    refreshChecked();
 }
 
 /**
@@ -195,6 +210,9 @@ void MainWindow::slotChooseLeaseFinished(QString choosen)
     meeting_name_btn->setText(getXml(choosen, "theme"));
     this->setWindowTitle(getXml(choosen, "room_name"));
     camera->start();
+
+    slotRefreshCards();
+    restoreChecked();
 }
 
 void MainWindow::slotExit()
@@ -212,12 +230,29 @@ void MainWindow::slotExit()
         if (text == user.password)
         {
             can_close = true;
+
+            qDebug() << "exit";
             this->close();
         }
         else
         {
             QMessageBox::warning(this, "错误", "密码输入错误,请重试");
         }
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent * event)
+{
+    qDebug() << "close event";
+    if (can_close || !user.isLogin())
+    {
+        //event->accept();
+        this->close();
+    }
+    else
+    {
+        event->ignore();
+        slotExit();
     }
 }
 
@@ -254,8 +289,9 @@ void MainWindow::slotRefreshCards()
     }
     else
     {
-        if (QMessageBox::information(this, "刷新结果", "获取到" + QString("%1").arg(count) + "张证件照\n是否清空已签到记录，重新计算？", "清空", "取消", 0, 1) == 0)
-            checked_list.clear();
+        if (checked_list.size() > 0)
+            if (QMessageBox::information(this, "刷新结果", "获取到" + QString("%1").arg(count) + "张证件照\n是否清空已签到记录，重新计算？", "清空", "取消", 0, 1) == 0)
+                checked_list.clear();
     }
 
     user.all_num = count;

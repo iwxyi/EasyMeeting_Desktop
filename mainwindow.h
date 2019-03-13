@@ -21,6 +21,7 @@
 #include "loginwindow.h"
 #include "leasewindow.h"
 #include "arcfaceidutil.h"
+#include "settings.h"
 
 class MainWindow : public QMainWindow
 {
@@ -40,6 +41,9 @@ private:
     void refreshChecked();
     void particiChecked(QString name);
     void particiLeaved(QString name);
+
+    void saveChecked();
+    void restoreChecked();
 
 protected:
     void closeEvent(QCloseEvent*event) override;
