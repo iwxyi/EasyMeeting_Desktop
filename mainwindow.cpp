@@ -24,14 +24,18 @@ void MainWindow::initView()
     finder = new QCameraViewfinder(this);
     capture = new QCameraImageCapture(camera);
     identify_btn = new QPushButton("人证识别", this);
+    result_label = new QLabel("结果", this);
 
     // 设置属性
     capture->setCaptureDestination(QCameraImageCapture::CaptureToFile);
     camera->setCaptureMode(QCamera::CaptureStillImage);
     camera->setViewfinder(finder);
     finder->setMinimumSize(500, 400);
+    meeting_name_btn->setFont(QFont("微软雅黑", 20));
+    result_label->setFont(QFont("微软雅黑", 20));
+    result_label->setAlignment(Qt::AlignCenter);
 
-    // 设置按钮
+    // 设置按钮提示
     check_btn->setEnabled(false); // 默认开启签到模式
     nickname_btn->setToolTip("登录账号后选择会议");
     exit_btn->setToolTip("退出程序；本次记录将会保留");
@@ -68,6 +72,7 @@ void MainWindow::initView()
         camera_layout->addLayout(camera_btn_layout);
         camera_layout->addWidget(finder);
         camera_layout->addWidget(identify_btn);
+        camera_layout->addWidget(result_label);
         mid_layout->addLayout(camera_layout);
     }
     // 中间右半部分布局
@@ -92,6 +97,8 @@ void MainWindow::initView()
 
 void MainWindow::initData()
 {
+    can_close = false;
+
     gotoLogin();
 }
 
@@ -135,9 +142,44 @@ void MainWindow::gotoChoose()
     lease_window->show();
 }
 
-void MainWindow::startIdentify()
+void MainWindow::startCompare(QString face_path)
 {
+    if (ArcFaceIdUtil::Compare(face_path, cards_dir+"/default.bmp")) // 验证通过
+    {
+        result_label->setText("通过");
+    }
+    else // 验证没有通过（不是同一个人）
+    {
+        qDebug() << "不是同一个人";
+    }
+}
 
+void MainWindow::refreshChecked()
+{
+    num_btn->setText(QString("%1 / %2").arg(user.arrive).arg(user.all_num));
+}
+
+void MainWindow::particiChecked(QString name)
+{
+    checked_list.append(name);
+}
+
+void MainWindow::particiLeaved(QString name)
+{
+    checked_list.removeOne(name);
+}
+
+void MainWindow::closeEvent(QCloseEvent * event)
+{
+    if (can_close || !user.isLogin())
+    {
+        event->accept();
+    }
+    else
+    {
+        event->ignore();
+        slotExit();
+    }
 }
 
 /**
@@ -176,6 +218,7 @@ void MainWindow::slotExit()
     {
         if (text == user.password)
         {
+            can_close = true;
             this->close();
         }
         else
@@ -199,7 +242,7 @@ void MainWindow::slotRefreshCards()
     {
         if (fi.isFile())
         {
-            qDebug() << "find image : " << fi.fileName();
+            //qDebug() << "find image : " << fi.fileName();
             count++;
         }
         else if (fi.fileName() == "." || fi.fileName() == "..")
@@ -218,8 +261,12 @@ void MainWindow::slotRefreshCards()
     }
     else
     {
-        QMessageBox::information(this, "刷新结果", "获取到" + QString("%1").arg(count) + "张证件照");
+        if (QMessageBox::information(this, "刷新结果", "获取到" + QString("%1").arg(count) + "张证件照\n是否清空已签到记录，重新计算？", "清空", "取消", 0, 1) == 0)
+            checked_list.clear();
     }
+
+    user.all_num = count;
+    refreshChecked();
 }
 
 void MainWindow::slotIdentifyBtnClicked()
@@ -231,16 +278,8 @@ void MainWindow::slotCameraImageCaptured(int id, QImage image)
 {
     QString face_path = APPLICATION_PATH+"captured.bmp";
     image.save(face_path);
-
-    if (ArcFaceIdUtil::Compare(face_path, cards_dir+"/default.bmp")) // 验证通过
-    {
-        qDebug() << "是同一个人";
-    }
-    else // 验证没有通过（不是同一个人）
-    {
-        qDebug() << "不是同一个人";
-    }
-
+    
+    startCompare(face_path);
 }
 
 void MainWindow::slotSwitchCheckLeave()

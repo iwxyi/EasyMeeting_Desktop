@@ -14,6 +14,8 @@ public :
     QString nickname;
 
     QString lease_id;
+    int arrive;
+    int all_num;
 
 };
 

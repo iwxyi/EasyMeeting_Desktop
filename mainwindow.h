@@ -34,7 +34,14 @@ private:
 
     void gotoLogin();
     void gotoChoose();
-    void startIdentify();
+    void startCompare(QString face_path);
+
+    void refreshChecked();
+    void particiChecked(QString name);
+    void particiLeaved(QString name);
+
+protected:
+    void closeEvent(QCloseEvent*event) override;
 
 public slots:
     void slotLoginFinished();
@@ -61,9 +68,12 @@ private:
     QCameraViewfinder* finder;
     QCameraImageCapture* capture;
     QPushButton* identify_btn;
+    QLabel * result_label;
 
     QString cards_dir;
+    QStringList checked_list;
 
+    bool can_close;
 };
 
 #endif // MAINWINDOW_H
