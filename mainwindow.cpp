@@ -60,6 +60,8 @@ void MainWindow::initView()
     connect(leave_btn, SIGNAL(clicked()), this, SLOT(slotSwitchCheckLeave()));
     connect(identify_btn, SIGNAL(clicked()), this, SLOT(slotIdentifyBtnClicked()));
     connect(result_reset_timer, SIGNAL(timeout()), this, SLOT(slotResultReset()));
+    connect(meeting_name_btn, SIGNAL(clicked()), this, SLOT(slotShowMeetingInfomation()));
+    connect(num_btn, SIGNAL(clicked()), this, SLOT(slotShowCheckedList()));
 
     // 顶部布局
     QHBoxLayout* top_layout = new QHBoxLayout;
@@ -202,6 +204,7 @@ void MainWindow::slotChooseLease()
 void MainWindow::slotChooseLeaseFinished(QString choosen)
 {
     user.lease_id = getXml(choosen, "lease_id");
+    user.lease_info = choosen;
 
     cards_dir = APPLICATION_PATH + "cards/" + user.lease_id;
     QDir dir(cards_dir);
@@ -215,12 +218,12 @@ void MainWindow::slotChooseLeaseFinished(QString choosen)
     restoreChecked();
 }
 
-void MainWindow::slotExit()
+bool MainWindow::slotExit()
 {
     if (!user.isLogin())
     {
         this->close();
-        return ;
+        return true;
     }
 
     bool isOK;
@@ -231,19 +234,22 @@ void MainWindow::slotExit()
         {
             can_close = true;
 
-            qDebug() << "exit";
+            //qDebug() << "exit";
             this->close();
+            return true;
         }
         else
         {
             QMessageBox::warning(this, "错误", "密码输入错误,请重试");
+            return false;
         }
     }
+    return false;
 }
 
 void MainWindow::closeEvent(QCloseEvent * event)
 {
-    qDebug() << "close event";
+    //qDebug() << "close event";
     if (can_close || !user.isLogin())
     {
         //event->accept();
@@ -251,8 +257,8 @@ void MainWindow::closeEvent(QCloseEvent * event)
     }
     else
     {
-        event->ignore();
-        slotExit();
+        if (!slotExit())
+            event->ignore();
     }
 }
 
@@ -328,6 +334,34 @@ void MainWindow::slotSwitchCheckLeave()
 void MainWindow::slotResultReset()
 {
     result_label->setText("");
+}
+
+void MainWindow::slotShowMeetingInfomation()
+{
+    QString lease = user.lease_info;
+    if (lease.isEmpty())
+    {
+        QMessageBox::information(this, "提示", "请先登录");
+        return ;
+    }
+
+    QString msg = "";
+    msg += "会议主题：" + getXml(lease, "theme");
+    msg += "\n租借用户：" + getXml(lease, "user_name");
+    msg += "\n会议用途：" + getXml(lease, "usage");
+    msg += "\n会议地点：" + getXml(lease, "room_name");
+    msg += "\n管 理 员：：" + getXml(lease, "admin_name");
+    msg += "\n开始时间：" + getXml(lease, "start_time");
+    msg += "\n结束时间：" + getXml(lease, "finish_time");
+    msg += "\n场地清理服务：" + (getXml(lease, "sweep")==QString("1") ? QString("是") : QString("否"));
+    msg += "\n现场安排服务：" + (getXml(lease, "entertain")==QString("1") ? QString("是") : QString("否"));
+    msg += "\n远程视频服务：" + (getXml(lease, "remote")==QString("1") ? QString("是") : QString("否"));
+    QMessageBox::information(this, "会议信息", msg);
+}
+
+void MainWindow::slotShowCheckedList()
+{
+
 }
 
 void MainWindow::startCompare(QString face_path)

@@ -52,12 +52,14 @@ public slots:
     void slotLoginFinished();
     void slotChooseLease();
     void slotChooseLeaseFinished(QString choosen);
-    void slotExit();
+    bool slotExit();
     void slotRefreshCards();
     void slotCameraImageCaptured(int id, QImage image);
     void slotIdentifyBtnClicked();
     void slotSwitchCheckLeave();
     void slotResultReset();
+    void slotShowMeetingInfomation();
+    void slotShowCheckedList();
 
 private:
     QPushButton* nickname_btn; // 用户昵称按钮
