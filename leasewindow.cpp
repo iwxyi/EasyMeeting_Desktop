@@ -74,7 +74,7 @@ void LeaseWindow::slotConnectLeasesFinished(QString result)
     QStringListModel* model = new QStringListModel(names);
     list_view->setModel(model);
 
-    list_view->setCurrentIndex(model->index(count-1));
+    list_view->setCurrentIndex(model->index(0));
 
     // 过期或者时间远远未到的租约是否变灰
     for (int i = 0; i < count; i++)

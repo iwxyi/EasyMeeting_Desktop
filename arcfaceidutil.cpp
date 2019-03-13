@@ -81,7 +81,7 @@ int ArcFaceIdUtil::Compare(QString path_face, QString path_card)
     }
     else
     {
-        qDebug() << "读取图片2失败";
+        qDebug() << "读取图片2失败" << path_card;
     }
 
     /* 证件照特征提取 */
@@ -89,6 +89,10 @@ int ArcFaceIdUtil::Compare(QString path_face, QString path_card)
     if (res != MOK)
     {
         qDebug() << "IdCard Feature Extraction failed, error code: " << res;
+        free(pFaceRes);
+        free(imgInfo0.ppu8Plane[0]);
+        free(imgInfo1.ppu8Plane[0]);
+        ArcSoft_FIC_UninitialEngine(hEngine);
         return res;
     }
 
@@ -100,6 +104,10 @@ int ArcFaceIdUtil::Compare(QString path_face, QString path_card)
     if (res != MOK)
     {
         qDebug() << "Face IdCard Compare failed, error code: " << res;
+        free(pFaceRes);
+        free(imgInfo0.ppu8Plane[0]);
+        free(imgInfo1.ppu8Plane[0]);
+        ArcSoft_FIC_UninitialEngine(hEngine);
         return res;
     }
     else

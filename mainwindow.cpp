@@ -296,7 +296,7 @@ void MainWindow::slotRefreshCards()
     else
     {
         if (checked_list.size() > 0)
-            if (QMessageBox::information(this, "刷新结果", "获取到" + QString("%1").arg(count) + "张证件照\n是否清空已签到记录，重新计算？", "清空", "取消", 0, 1) == 0)
+            if (QMessageBox::information(this, "刷新结果", "刷新" + QString("%1").arg(count) + "张证件照\n是否清空已签到记录，重新计算？", "清空", "取消", 0, 1) == 0)
                 checked_list.clear();
     }
 
@@ -381,7 +381,7 @@ void MainWindow::startCompare(QString face_path)
     QDir dir(cards_dir);
     foreach(QFileInfo fi, dir.entryInfoList())
     {
-        if (fi.isFile())
+        if (fi.isFile() && fi.filePath().endsWith("bmp"))
         {
             QString file_name = fi.filePath();
             QString base_name = fi.baseName();
@@ -407,6 +407,11 @@ void MainWindow::startCompare(QString face_path)
             else if (code == 81925) // 人脸检测失败
             {
                 result_label->setText("请对准镜头，重新识别");
+                return ;
+            }
+            else if (code == 4) // 内存不足
+            {
+                result_label->setText("内存不足，请重启软件");
                 return ;
             }
         }
