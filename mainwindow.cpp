@@ -394,13 +394,27 @@ void MainWindow::startCompare(QString face_path)
             {
                 if (!check_btn->isEnabled())
                 {
+                    int i;
+                    for (i = 0; i < checked_list.size(); i++)
+                        if (checked_list[i] == base_name)
+                            break;
+                    if (i == checked_list.size()) // 没有这个人
+                        result_label->setText(base_name + " 签到成功");
+                    else
+                        result_label->setText(base_name + " 已签到");
                     particiChecked(base_name);
-                    result_label->setText(base_name + " 签到成功");
                 }
                 else
                 {
+                    int i;
+                    for (i = 0; i < checked_list.size(); i++)
+                        if (checked_list[i] == base_name)
+                            break;
+                    if (i == checked_list.size()) // 没有这个人
+                        result_label->setText(base_name + " 签退成功，但未签到");
+                    else
+                        result_label->setText(base_name + " 签退成功");
                     particiLeaved(base_name);
-                    result_label->setText(base_name + " 签退成功");
                 }
                 return ;
             }
