@@ -25,6 +25,9 @@ void MainWindow::initView()
     capture = new QCameraImageCapture(camera);
     identify_btn = new QPushButton("人证识别", this);
     result_label = new QLabel("结果", this);
+    result_reset_timer = new QTimer(this);
+    result_reset_timer->setInterval(3000);
+    result_reset_timer->setSingleShot(true);
 
     // 设置属性
     capture->setCaptureDestination(QCameraImageCapture::CaptureToFile);
@@ -54,6 +57,7 @@ void MainWindow::initView()
     connect(check_btn, SIGNAL(clicked()), this, SLOT(slotSwitchCheckLeave()));
     connect(leave_btn, SIGNAL(clicked()), this, SLOT(slotSwitchCheckLeave()));
     connect(identify_btn, SIGNAL(clicked()), this, SLOT(slotIdentifyBtnClicked()));
+    connect(result_reset_timer, SIGNAL(timeout()), this, SLOT(slotResultReset()));
 
     // 顶部布局
     QHBoxLayout* top_layout = new QHBoxLayout;
@@ -142,40 +146,6 @@ void MainWindow::gotoChoose()
     lease_window->show();
 }
 
-void MainWindow::startCompare(QString face_path)
-{
-    QDir dir(cards_dir);
-    foreach(QFileInfo fi, dir.entryInfoList())
-    {
-        if (fi.isFile())
-        {
-            QString file_name = fi.filePath();
-            QString base_name = fi.baseName();
-            qDebug() << "filename:" << file_name;
-            int code = ArcFaceIdUtil::Compare(face_path, file_name);
-            if (code == 0) // 不是这个人
-            {
-                ;
-            }
-            else if (code == 1) // 是这个人
-            {
-                result_label->setText("识别结果：" + base_name);
-                if (!check_btn->isEnabled())
-                    particiChecked(base_name);
-                else
-                    particiLeaved(base_name);
-                return ;
-            }
-            else if (code == 81925) // 人脸检测失败
-            {
-                result_label->setText("请对准镜头，重新识别");
-                return ;
-            }
-        }
-    }
-    result_label->setText("识别失败，请重试");
-}
-
 void MainWindow::refreshChecked()
 {
     num_btn->setText(QString("%1 / %2").arg(user.arrive).arg(user.all_num));
@@ -196,7 +166,7 @@ void MainWindow::closeEvent(QCloseEvent * event)
     if (can_close || !user.isLogin())
     {
         //event->accept();
-        //this->close();
+        this->close();
     }
     else
     {
@@ -319,7 +289,50 @@ void MainWindow::slotSwitchCheckLeave()
     }
 }
 
+void MainWindow::slotResultReset()
+{
+    result_label->setText("");
+}
 
+void MainWindow::startCompare(QString face_path)
+{
+    result_reset_timer->start();
+
+    QDir dir(cards_dir);
+    foreach(QFileInfo fi, dir.entryInfoList())
+    {
+        if (fi.isFile())
+        {
+            QString file_name = fi.filePath();
+            QString base_name = fi.baseName();
+            int code = ArcFaceIdUtil::Compare(face_path, file_name);
+            if (code == 0) // 不是这个人
+            {
+                ;
+            }
+            else if (code == 1) // 是这个人
+            {
+                if (!check_btn->isEnabled())
+                {
+                    particiChecked(base_name);
+                    result_label->setText(base_name + " 签到成功");
+                }
+                else
+                {
+                    particiLeaved(base_name);
+                    result_label->setText(base_name + " 签退成功");
+                }
+                return ;
+            }
+            else if (code == 81925) // 人脸检测失败
+            {
+                result_label->setText("请对准镜头，重新识别");
+                return ;
+            }
+        }
+    }
+    result_label->setText("识别失败，请重试");
+}
 
 
 

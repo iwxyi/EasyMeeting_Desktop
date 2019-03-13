@@ -16,6 +16,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QTimer>
 #include "globals.h"
 #include "loginwindow.h"
 #include "leasewindow.h"
@@ -52,6 +53,7 @@ public slots:
     void slotCameraImageCaptured(int id, QImage image);
     void slotIdentifyBtnClicked();
     void slotSwitchCheckLeave();
+    void slotResultReset();
 
 private:
     QPushButton* nickname_btn; // 用户昵称按钮
@@ -69,6 +71,7 @@ private:
     QCameraImageCapture* capture;
     QPushButton* identify_btn;
     QLabel * result_label;
+    QTimer* result_reset_timer;
 
     QString cards_dir;
     QStringList checked_list;
