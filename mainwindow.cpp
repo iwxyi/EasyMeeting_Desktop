@@ -195,7 +195,8 @@ void MainWindow::closeEvent(QCloseEvent * event)
 {
     if (can_close || !user.isLogin())
     {
-        event->accept();
+        //event->accept();
+        //this->close();
     }
     else
     {
