@@ -45,6 +45,8 @@ private:
     void saveChecked();
     void restoreChecked();
 
+    QString timestampToString(int timestamp);
+
 protected:
     void closeEvent(QCloseEvent*event) override;
 

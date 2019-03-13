@@ -351,12 +351,19 @@ void MainWindow::slotShowMeetingInfomation()
     msg += "\n会议用途：" + getXml(lease, "usage");
     msg += "\n会议地点：" + getXml(lease, "room_name");
     msg += "\n管 理 员：：" + getXml(lease, "admin_name");
-    msg += "\n开始时间：" + getXml(lease, "start_time");
-    msg += "\n结束时间：" + getXml(lease, "finish_time");
+    msg += "\n开始时间：" + timestampToString(getXml(lease, "start_time").toInt());
+    msg += "\n结束时间：" + timestampToString(getXml(lease, "finish_time").toInt());
     msg += "\n场地清理服务：" + (getXml(lease, "sweep")==QString("1") ? QString("是") : QString("否"));
     msg += "\n现场安排服务：" + (getXml(lease, "entertain")==QString("1") ? QString("是") : QString("否"));
     msg += "\n远程视频服务：" + (getXml(lease, "remote")==QString("1") ? QString("是") : QString("否"));
     QMessageBox::information(this, "会议信息", msg);
+}
+
+QString MainWindow::timestampToString(int timestamp)
+{
+    QDateTime time = QDateTime::fromTime_t(timestamp);
+    //qDebug() << timestamp << "  " << time.toString();
+    return time.toString();
 }
 
 void MainWindow::slotShowCheckedList()
