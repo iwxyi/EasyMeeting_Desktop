@@ -144,13 +144,33 @@ void MainWindow::gotoChoose()
 
 void MainWindow::startCompare(QString face_path)
 {
-    if (ArcFaceIdUtil::Compare(face_path, cards_dir+"/default.bmp")) // 验证通过
+    QDir dir(cards_dir);
+    foreach(QFileInfo fi, dir.entryInfoList())
     {
-        result_label->setText("通过");
-    }
-    else // 验证没有通过（不是同一个人）
-    {
-        qDebug() << "不是同一个人";
+        if (fi.isFile())
+        {
+            QString file_name = fi.fileName();
+            QString base_name = fi.baseName();
+            int code = ArcFaceIdUtil::Compare(face_path, file_name);
+            if (code == 0) // 不是这个人
+            {
+                ;
+            }
+            else if (code == 1) // 是这个人
+            {
+                result_label->setText("识别结果：" + base_name);
+                if (!check_btn->isEnabled())
+                    particiChecked(base_name);
+                else
+                    particiLeaved(base_name);
+                return ;
+            }
+            else if (code == 81925) // 人脸检测失败
+            {
+                result_label->setText("请对准镜头，重新识别");
+                return ;
+            }
+        }
     }
 }
 

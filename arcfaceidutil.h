@@ -27,7 +27,7 @@ public:
 
     bool refreshCards(QString path);
 
-    static bool Compare(QString path_face, QString path_card);
+    static int Compare(QString path_face, QString path_card);
     static bool Compare(QString path_face, QStringList paths_card);
 
     static QSize getImageSize(QString path);

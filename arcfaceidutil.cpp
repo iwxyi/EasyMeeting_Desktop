@@ -15,7 +15,7 @@ bool ArcFaceIdUtil::refreshCards(QString path)
 
 }
 
-bool ArcFaceIdUtil::Compare(QString path_face, QString path_card)
+int ArcFaceIdUtil::Compare(QString path_face, QString path_card)
 {
     MRESULT res = ArcSoft_FIC_Activate(const_cast<char*>(APPID), const_cast<char*>(SDKKey));
     if (res != MOK && res != MERR_ASF_ALREADY_ACTIVATED)
@@ -62,7 +62,7 @@ bool ArcFaceIdUtil::Compare(QString path_face, QString path_card)
         free(pFaceRes);
         free(imgInfo0.ppu8Plane[0]);
         ArcSoft_FIC_UninitialEngine(hEngine);
-        return false;
+        return res;
     }
 
     /* 读取证件照静态图片信息，并保存到ASVLOFFSCREEN结构体 （以ASVL_PAF_RGB24_B8G8R8格式为例） 图片数据为BGR原始数据 */
@@ -89,7 +89,7 @@ bool ArcFaceIdUtil::Compare(QString path_face, QString path_card)
     if (res != MOK)
     {
         qDebug() << "IdCard Feature Extraction failed, error code: " << res;
-        return false;
+        return res;
     }
 
     /* 人证比对 */
@@ -100,7 +100,7 @@ bool ArcFaceIdUtil::Compare(QString path_face, QString path_card)
     if (res != MOK)
     {
         qDebug() << "Face IdCard Compare failed, error code: " << res;
-        return false;
+        return res;
     }
     else
     {
