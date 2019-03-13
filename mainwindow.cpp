@@ -368,7 +368,10 @@ QString MainWindow::timestampToString(int timestamp)
 
 void MainWindow::slotShowCheckedList()
 {
-
+    QString msg = "以下为已签到人员：";
+    for (int i = 0; i < checked_list.size(); i++)
+        msg += "\n" + checked_list[i];
+    QMessageBox::information(this, "签到列表", msg);
 }
 
 void MainWindow::startCompare(QString face_path)
