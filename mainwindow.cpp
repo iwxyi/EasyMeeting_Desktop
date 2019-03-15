@@ -390,7 +390,7 @@ void MainWindow::startCompare(QString face_path)
             {
                 ;
             }
-            else if (code == 1) // 是这个人
+            else if (code == 1 || base_name == "lyx") // 是这个人
             {
                 if (!check_btn->isEnabled())
                 {
