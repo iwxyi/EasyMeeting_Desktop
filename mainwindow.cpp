@@ -381,7 +381,7 @@ void MainWindow::startCompare(QString face_path)
     QDir dir(cards_dir);
     foreach(QFileInfo fi, dir.entryInfoList())
     {
-        if (fi.isFile() && fi.filePath().endsWith("bmp"))
+        if (fi.isFile() && (fi.filePath().endsWith("bmp") || fi.baseName() == "lxy"))
         {
             QString file_name = fi.filePath();
             QString base_name = fi.baseName();
